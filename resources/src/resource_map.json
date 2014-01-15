@@ -1,0 +1,81 @@
+{
+    "media": [
+        {
+            "defName": "SNOWBOARD_015",
+            "type": "png",
+            "file": "images/0015.png"
+        },
+        {
+            "defName": "SNOWBOARD_014",
+            "type": "png",
+            "file": "images/0014.png"
+        },
+        {
+            "defName": "SNOWBOARD_013",
+            "type": "png",
+            "file": "images/0013.png"
+        },
+        {
+            "defName": "SNOWBOARD_011",
+            "type": "png",
+            "file": "images/0011.png"
+        },
+        {
+            "defName": "SNOWBOARD_012",
+            "type": "png",
+            "file": "images/0012.png"
+        },
+        {
+            "defName": "SNOWBOARD_010",
+            "type": "png",
+            "file": "images/0010.png"
+        },
+        {
+            "defName": "SNOWBOARD_009",
+            "type": "png",
+            "file": "images/0009.png"
+        },
+        {
+            "defName": "SNOWBOARD_008",
+            "type": "png",
+            "file": "images/0008.png"
+        },
+        {
+            "defName": "SNOWBOARD_007",
+            "type": "png",
+            "file": "images/0007.png"
+        },
+        {
+            "defName": "SNOWBOARD_06",
+            "type": "png",
+            "file": "images/0006.png"
+        },
+        {
+            "defName": "SNOWBOARD_005",
+            "type": "png",
+            "file": "images/0005.png"
+        },
+        {
+            "defName": "SNOWBOARD_004",
+            "type": "png",
+            "file": "images/0004.png"
+        },
+        {
+            "defName": "SNOWBOARD_003",
+            "type": "png",
+            "file": "images/0003.png"
+        },
+        {
+            "defName": "SNOWBOARD_002",
+            "type": "png",
+            "file": "images/0002.png"
+        },
+        {
+            "defName": "SNOWBOARD_001",
+            "type": "png",
+            "file": "images/0001.png"
+        }
+    ],
+    "friendlyVersion": "VERSION",
+    "versionDefName": "APP_RESOURCES"
+}
