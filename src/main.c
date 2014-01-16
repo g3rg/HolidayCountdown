@@ -151,9 +151,9 @@ void handle_init(AppContextRef ctx) {
 	setTime(&time);
 
 	int width = 144;
-	int height = 78;
+	int height = 75;
 	bmp_init_container(RESOURCE_ID_SNOWBOARD_008, &imgContainer);
-	layer_set_frame(&imgContainer.layer.layer, GRect(0, 60, width, height));
+	layer_set_frame(&imgContainer.layer.layer, GRect(0, 63, width, height));
 	layer_add_child( window_get_root_layer(&window), &imgContainer.layer.layer);
 
 	//setImage(&container, RESOURCE_ID_SNOWBOARD_008, GRect(0, 30, width, height) );*/
@@ -168,10 +168,14 @@ void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t) {
 	setTime(t->tick_time);    //Change time on 'zero seconds' mark
 }
 
+void handle_deinit(AppContextRef ctx) {
+	bmp_deinit_container(&imgContainer);
+}
+
 void pbl_main(void *params) {
 	PebbleAppHandlers handlers = {
 	.init_handler = &handle_init,    //Register initialisation function
-	 
+	.deinit_handler = &handle_deinit,
 	.tick_info = {
 	.tick_handler = &handle_minute_tick,    //Register tick function
 	.tick_units = MINUTE_UNIT    //Specify to call every minute
