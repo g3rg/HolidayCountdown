@@ -19,6 +19,8 @@ TextLayer timeLayer;
 TextLayer countdownLayer;
 TextLayer eventLayer;
 
+AppTimerHandle timer_handle; 
+
 const int ANIMATION_IMAGES[] = {
 	RESOURCE_ID_SNOWBOARD_001,	
 	RESOURCE_ID_SNOWBOARD_002,
@@ -36,11 +38,14 @@ const int ANIMATION_IMAGES[] = {
 	RESOURCE_ID_SNOWBOARD_014,
 	RESOURCE_ID_SNOWBOARD_015	
 };
+static int MAX_FRAME=14;
 
 BmpContainer imgContainer;
-int frameCount = 0;
-AppTimerHandle timer_handle;
-
+int currentFrame = 0;
+int ANIMATION_WIDTH = 144;
+int ANIMATION_HEIGHT = 75;
+int ANIMATION_X = 0;
+int ANIMATION_Y = 63;
 
 static char hourText[] = "00:00";
 
@@ -100,7 +105,7 @@ void setTime(PblTm *t) {
 	text_layer_set_text(&eventLayer, EVENT_LABEL);
 	calculate_countdown();
 }
-/*
+
 void setImage(BmpContainer *container, const int resourceId, GRect bounds) {
 	layer_remove_from_parent(&container->layer.layer);
 	bmp_deinit_container(container);
@@ -110,7 +115,7 @@ void setImage(BmpContainer *container, const int resourceId, GRect bounds) {
 	layer_set_frame(&container->layer.layer, bounds);
 	
 	layer_add_child(&window.layer, &container->layer.layer);
-}*/
+}
 
 void handle_init(AppContextRef ctx) {
 	(void)ctx;    //This is not needed. Convert to void (nothing)
@@ -150,15 +155,38 @@ void handle_init(AppContextRef ctx) {
 	get_time(&time);
 	setTime(&time);
 
-	int width = 144;
-	int height = 75;
 	bmp_init_container(RESOURCE_ID_SNOWBOARD_008, &imgContainer);
-	layer_set_frame(&imgContainer.layer.layer, GRect(0, 63, width, height));
+	layer_set_frame(&imgContainer.layer.layer, GRect(ANIMATION_X, ANIMATION_Y, ANIMATION_WIDTH, ANIMATION_HEIGHT));
 	layer_add_child( window_get_root_layer(&window), &imgContainer.layer.layer);
-
-	//setImage(&container, RESOURCE_ID_SNOWBOARD_008, GRect(0, 30, width, height) );*/
 }
 
+/*
+void dodgy_animate() {
+	for (int i=0; i<15; i++) {
+		setImage(&imgContainer, ANIMATION_IMAGES[i], GRect(ANIMATION_X, ANIMATION_Y, ANIMATION_WIDTH, ANIMATION_HEIGHT) );
+		psleep(200);
+	}
+	setImage(&imgContainer, RESOURCE_ID_SNOWBOARD_000, GRect(ANIMATION_X, ANIMATION_Y, ANIMATION_WIDTH, ANIMATION_HEIGHT) );
+	
+}*/
+
+void handle_timer(AppContextRef ctx, AppTimerHandle handle, uint32_t cookie) {
+	(void)ctx;
+	(void)handle;
+	
+	if (cookie == 1) {
+		currentFrame++;
+		if (currentFrame > MAX_FRAME) {
+			currentFrame = 0;
+			setImage(&imgContainer, RESOURCE_ID_SNOWBOARD_000, GRect(ANIMATION_X, ANIMATION_Y, ANIMATION_WIDTH, ANIMATION_HEIGHT) );
+		} else {
+			setImage(&imgContainer, ANIMATION_IMAGES[currentFrame], GRect(ANIMATION_X, ANIMATION_Y, ANIMATION_WIDTH, ANIMATION_HEIGHT) );
+			timer_handle = app_timer_send_event(ctx, 300, 1);
+	    }
+		Layer *root = window_get_root_layer(&window);
+		layer_mark_dirty(root);
+	}
+}
 
 void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t) {
 	(void)ctx;
@@ -166,20 +194,23 @@ void handle_minute_tick(AppContextRef ctx, PebbleTickEvent *t) {
 	PblTm time;    //Structure to store time info
 	get_time(&time);    //Fill the structure with current time
 	setTime(t->tick_time);    //Change time on 'zero seconds' mark
+	timer_handle = app_timer_send_event(ctx, 300, 1);
 }
 
 void handle_deinit(AppContextRef ctx) {
 	bmp_deinit_container(&imgContainer);
+	app_timer_cancel_event(ctx, timer_handle);
 }
 
 void pbl_main(void *params) {
 	PebbleAppHandlers handlers = {
-	.init_handler = &handle_init,    //Register initialisation function
-	.deinit_handler = &handle_deinit,
-	.tick_info = {
-	.tick_handler = &handle_minute_tick,    //Register tick function
-	.tick_units = MINUTE_UNIT    //Specify to call every minute
-	}
+		.init_handler = &handle_init,    //Register initialisation function
+		.deinit_handler = &handle_deinit,
+		.timer_handler = &handle_timer,
+		.tick_info = {
+			.tick_handler = &handle_minute_tick,    //Register tick function
+			.tick_units = MINUTE_UNIT    //Specify to call every minute
+		}
 	};
 	app_event_loop(params, &handlers);    //Continue from there!
 }

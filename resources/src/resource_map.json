@@ -1,6 +1,11 @@
 {
     "media": [
         {
+            "defName": "SNOWBOARD_000",
+            "type": "png",
+            "file": "images/0000.png"
+        },
+        {
             "defName": "SNOWBOARD_015",
             "type": "png",
             "file": "images/0015.png"
