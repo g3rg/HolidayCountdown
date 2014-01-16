@@ -10,8 +10,6 @@
 #include "pebble_fonts.h"
 #include "PDUtils.h"
 	
-#include "resource_ids.auto.h"
-	
 #define UUID { 0x88, 0xa9, 0x7c, 0xfd, 0x23, 0x77, 0x46, 0x3a, 0x84, 0xbd, 0xb8, 0x5e, 0xb4, 0x96, 0x61, 0x61 }
 
 PBL_APP_INFO(UUID, "Holiday Countdown", "g3rg", 0, 1, DEFAULT_MENU_ICON, APP_INFO_WATCH_FACE);
@@ -20,6 +18,29 @@ Window window;
 TextLayer timeLayer;
 TextLayer countdownLayer;
 TextLayer eventLayer;
+
+const int ANIMATION_IMAGES[] = {
+	RESOURCE_ID_SNOWBOARD_001,	
+	RESOURCE_ID_SNOWBOARD_002,
+	RESOURCE_ID_SNOWBOARD_003,
+	RESOURCE_ID_SNOWBOARD_004,
+	RESOURCE_ID_SNOWBOARD_005,
+	RESOURCE_ID_SNOWBOARD_006,
+	RESOURCE_ID_SNOWBOARD_007,
+	RESOURCE_ID_SNOWBOARD_008,
+	RESOURCE_ID_SNOWBOARD_009,
+	RESOURCE_ID_SNOWBOARD_010,
+	RESOURCE_ID_SNOWBOARD_011,
+	RESOURCE_ID_SNOWBOARD_012,
+	RESOURCE_ID_SNOWBOARD_013,
+	RESOURCE_ID_SNOWBOARD_014,
+	RESOURCE_ID_SNOWBOARD_015	
+};
+
+BmpContainer imgContainer;
+int frameCount = 0;
+AppTimerHandle timer_handle;
+
 
 static char hourText[] = "00:00";
 
@@ -79,18 +100,17 @@ void setTime(PblTm *t) {
 	text_layer_set_text(&eventLayer, EVENT_LABEL);
 	calculate_countdown();
 }
-
+/*
 void setImage(BmpContainer *container, const int resourceId, GRect bounds) {
-	/*
 	layer_remove_from_parent(&container->layer.layer);
 	bmp_deinit_container(container);
 	
 	bmp_init_container(resourceId, container);
 	
 	layer_set_frame(&container->layer.layer, bounds);
-	layer_add_child(window->layer, &container->layer.layer);
-	*/
-}
+	
+	layer_add_child(&window.layer, &container->layer.layer);
+}*/
 
 void handle_init(AppContextRef ctx) {
 	(void)ctx;    //This is not needed. Convert to void (nothing)
@@ -129,11 +149,14 @@ void handle_init(AppContextRef ctx) {
 	PblTm time;
 	get_time(&time);
 	setTime(&time);
-	/*
-	BmpContainer container;
+
 	int width = 144;
 	int height = 78;
-	setImage(&container, RESOURCE_ID_SNOWBOARD_008, GRect(0, 30, width, height) );*/
+	bmp_init_container(RESOURCE_ID_SNOWBOARD_008, &imgContainer);
+	layer_set_frame(&imgContainer.layer.layer, GRect(0, 60, width, height));
+	layer_add_child( window_get_root_layer(&window), &imgContainer.layer.layer);
+
+	//setImage(&container, RESOURCE_ID_SNOWBOARD_008, GRect(0, 30, width, height) );*/
 }
 
 
